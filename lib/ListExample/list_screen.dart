@@ -1,8 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:open_app_settings/open_app_settings.dart';
 
 import '../HomeExample/utils/colors.dart';
 import 'list_controller.dart';
@@ -12,14 +14,14 @@ class ExampleListScreen extends StatelessWidget {
 
   ListController listController = Get.put(ListController());
 
+  // HomeController homeController = Get.find<HomeController>();
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: MyColors.bgColor,
       appBar: _buildAppBar(),
       body: GetBuilder<ListController>(builder: (controller) {
-
         return SizedBox(
             width: double.infinity,
             height: double.infinity,
@@ -35,8 +37,26 @@ class ExampleListScreen extends StatelessWidget {
     return AppBar(
       backgroundColor: MyColors.prColor,
       centerTitle: true,
+      actions: [
+        IconButton(onPressed: _handleOnPress, icon: Icon(Icons.add)),
+        IconButton(
+            onPressed: () async {
+              await OpenAppSettings.openAppSettings();
+            },
+            icon: Icon(Icons.ac_unit))
+      ],
       title: const Text("Restful API - Dio"),
     );
+  }
+
+  void _handleOnPress() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      print("result is found");
+    } else {
+      print("no result found");
+    }
   }
 
   /// Floating Action Button
@@ -90,12 +110,15 @@ class ExampleListScreen extends StatelessWidget {
     return RefreshIndicator(
       color: MyColors.prColor,
       onRefresh: () {
-        return listController.getCurrencies();
+        return listController.onRefresh();
       },
       child: listController.listCurrencies.isEmpty
-          ? Text("empty",style: TextStyle(fontSize: 50),)
+          ? const Text(
+              "empty",
+              style: TextStyle(fontSize: 50),
+            )
           : ListView.builder(
-              physics: const BouncingScrollPhysics(),
+              controller: listController.scrollController,
               itemCount: listController.listCurrencies.length,
               itemBuilder: (context, index) {
                 return InkWell(
