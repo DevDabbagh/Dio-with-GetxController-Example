@@ -119,13 +119,13 @@ class ExampleListScreen extends StatelessWidget {
             )
           : ListView.builder(
               controller: listController.scrollController,
+
               itemCount: listController.listCurrencies.length,
               itemBuilder: (context, index) {
                 return InkWell(
                   child: Container(
                     padding: const EdgeInsetsDirectional.all(20),
-                    child: Text(
-                      listController.listCurrencies[index].dValue,
+                    child: Text("${listController.listCurrencies[index].dValue}",
                       style: const TextStyle(fontSize: 30, color: Colors.black),
                     ),
                   ),
