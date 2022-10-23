@@ -53,7 +53,7 @@ class ExampleListScreen extends StatelessWidget {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      print("result is found");
+      print("result is found 2");
     } else {
       print("no result found");
     }
